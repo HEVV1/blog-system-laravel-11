@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use App\Models\Blog;
+use Illuminate\Support\Facades\Gate;
 
 class BlogController
 {
@@ -25,7 +27,13 @@ class BlogController
      */
     public function create()
     {
-        //
+        try {
+            Gate::authorize('create', Blog::class);
+        } catch (AuthorizationException $e) {
+            return redirect()->route('login');
+        }
+
+        return view('blog.create');
     }
 
     /**

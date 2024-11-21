@@ -1,5 +1,6 @@
 <x-layout>
-
+    <x-bread-crumbs class="mb-8"
+                    :links="['Login' => route('auth.create')]"/>
     <x-card class="py-8 px-16">
         <form action="{{route('auth.store')}}" method="POST">
             <h1 class="my-10 text-center text-4xl font-medium text-slate-600">Sign in to your account</h1>

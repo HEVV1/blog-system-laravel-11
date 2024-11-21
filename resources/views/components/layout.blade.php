@@ -27,11 +27,16 @@
                 </form>
             </li>
         @else
-            <li>
-                <x-button>
-                    <a href="{{route('auth.create')}}">Sign In</a>
-                </x-button>
-            </li>
+            @if(!request()->routeIs('auth.create'))
+                <li>
+                    <x-link-button href="{{route('auth.create')}}">Log In</x-link-button>
+                </li>
+            @else
+                <li>
+                    <x-link-button href="{{route('blog.index')}}">Sign In</x-link-button>
+                </li>
+            @endif
+
         @endauth
     </ul>
 </nav>
