@@ -2,7 +2,7 @@
     <div class="flex justify-between mb-4">
         <div class="text-sm font-medium flex items-center">
             <img class="w-6 mr-2" src="{{asset('icons/ic_user.png')}}" alt="">
-            <span>{{$blog->user_id}}</span>
+            <span>{{$blog->user->name}}</span>
         </div>
         <span class="text-slate-400 text-xs">
             {{$blog->created_at->format('Y-M-d h:i A')}}

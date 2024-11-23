@@ -1,9 +1,10 @@
 <x-layout>
     <x-bread-crumbs class="mb-8"
-                    :links="['Create Blog' => route('blog.create')]"/>
+                    :links="['Edit Blog' => route('blog.edit', ['blog' => $blog])]"/>
     <x-card>
-        <form method="POST" action="{{route('blog.store')}}">
+        <form method="POST" action="{{route('blog.update', $blog)}}">
             @csrf
+            @method('PUT')
             <div class="mb-8">
                 <label for="title" class="mb-2 block text-sm font-medium text-slate-900">Title</label>
                 <x-text-input
@@ -22,14 +23,14 @@
                     type="text"
                     name="body"
                     placeholder="Blog Title"
-                    rows="10">{{ $blog->body ?? old('body') }}</x-textarea-input>
+                    rows="10">{{$blog->body ?? old('body')}}</x-textarea-input>
                 @error('body')
                 <p class="error">{{$message}}</p>
                 @enderror
             </div>
 
             <div class="flex justify-end">
-                <x-button>Post</x-button>
+                <x-button>Edit Blog</x-button>
             </div>
         </form>
     </x-card>

@@ -20,5 +20,5 @@ Route::delete('auth', [AuthController::class, 'destroy'])
 
 Route::middleware('auth')->group(function () {
     Route::resource('blog', BlogController::class)
-        ->only(['store', 'update', 'destroy']);
+        ->only(['store', 'update', 'edit', 'destroy']);
 });

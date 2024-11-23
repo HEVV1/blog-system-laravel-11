@@ -22,4 +22,5 @@
             </x-blog-card>
         </a>
     @endforeach
+    {{$blogs->links()}}
 </x-layout>
