@@ -20,20 +20,19 @@
                 User: {{auth()->user()->name ?? 'Anonymous'}}
             </li>
             <li>
-                <form method="POST" action="{{route('auth.destroy')}}">
+                <form method="POST" action="{{route('logout')}}">
                     @csrf
-                    @method('DELETE')
                     <x-button>Logout</x-button>
                 </form>
             </li>
         @else
-            @if(!request()->routeIs('auth.create'))
+            @if(!request()->routeIs('register.form'))
                 <li>
-                    <x-link-button href="{{route('auth.create')}}">Log In</x-link-button>
+                    <x-link-button href="{{route('register.form')}}">Sign In</x-link-button>
                 </li>
             @else
                 <li>
-                    <x-link-button href="{{route('blog.index')}}">Sign In</x-link-button>
+                    <x-link-button href="{{route('login.form')}}">Log In</x-link-button>
                 </li>
             @endif
 

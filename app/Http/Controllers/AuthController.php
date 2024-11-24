@@ -2,49 +2,78 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController
 {
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function showRegistrationForm()
     {
-        return view('auth.create');
+        if (Auth::check()) {
+            return redirect()->back()
+                ->with('info', 'You are already logged in.');
+        }
+        return view('auth.register');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function register(Request $request)
     {
         $request->validate([
-            'email' => 'required|string|email|max:255',
-            'password' => 'required|string'
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
         ]);
 
-        $credentials = $request->only('email', 'password');
-        $remember = $request->filled('remember');
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
 
-        if (Auth::attempt($credentials, $remember)) {
-            return redirect()->intended('/');
-        } else {
-            return redirect()->back()->with('error', 'Invalid Credentials');
-        }
+        Auth::login($user);
+
+        return redirect()->route('blog.index')
+            ->with('success', 'Account successfully created');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy()
+    public function showLoginForm()
+    {
+        if (Auth::check()) {
+            return redirect()->back()
+                ->with('info', 'You are already logged in.');
+        }
+        return view('auth.login');
+    }
+
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            $request->session()->regenerate();
+
+            return redirect()->route('blog.index')
+                ->with('success', 'Login successfully');
+        }
+
+        return back()->withErrors([
+            'email' => 'Incorrect email or password',
+        ]);
+    }
+
+    public function logout(Request $request)
     {
         Auth::logout();
 
-        request()->session()->invalidate();
-        request()->session()->regenerateToken();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect()->route('blog.index')
+            ->with('success', 'You have been logged out');
     }
 }

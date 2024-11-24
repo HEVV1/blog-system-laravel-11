@@ -9,7 +9,7 @@
                 <x-text-input
                     type="text"
                     name="title"
-                    value="{{$blog->title ?? old('title')}}"
+                    value="{{old('title')}}"
                     placeholder="Blog Title">
                 </x-text-input>
                 @error('title')
@@ -22,7 +22,7 @@
                     type="text"
                     name="body"
                     placeholder="Blog Title"
-                    rows="10">{{ $blog->body ?? old('body') }}</x-textarea-input>
+                    rows="10">{{old('body')}}</x-textarea-input>
                 @error('body')
                 <p class="error">{{$message}}</p>
                 @enderror
