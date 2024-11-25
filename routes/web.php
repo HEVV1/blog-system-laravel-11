@@ -25,4 +25,8 @@ Route::middleware('auth')->group(function () {
         ->only(['store', 'update', 'edit', 'destroy']);
     Route::post('logout', [AuthController::class, 'logout'])
         ->name('logout');
+    Route::post('/blogs/{blog}/categories', [BlogController::class, 'addCategories'])
+        ->name('blog.categories.add');
+    Route::delete('/blogs/{blog}/categories', [BlogController::class, 'removeCategories'])
+        ->name('blog.categories.remove');
 });

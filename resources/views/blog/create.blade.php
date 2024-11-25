@@ -28,6 +28,19 @@
                 @enderror
             </div>
 
+            <div class="mb-4">
+                <label class="font-semibold text-slate-500 text-lg" for="categories">Add categories:</label>
+                <select
+                    class="form-control bg-gray-100 border border-gray-300 rounded-lg px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 w-full"
+                    name="categories[]"
+                    id="categories"
+                    multiple>
+                    @foreach($allCategories as $category)
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
             <div class="flex justify-end">
                 <x-button>Post</x-button>
             </div>

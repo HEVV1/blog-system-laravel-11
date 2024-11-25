@@ -15,7 +15,7 @@
             </div>
         </form>
     </div>
-    <x-link-button href="{{route('blog.create')}}">Create a new blog</x-link-button>
+    <x-link-button class="mb-4" href="{{route('blog.create')}}">Create a new blog</x-link-button>
     @foreach($blogs as $blog)
         <a href="{{route('blog.show', $blog)}}">
             <x-blog-card :blog="$blog" class="hover:bg-slate-100 ">

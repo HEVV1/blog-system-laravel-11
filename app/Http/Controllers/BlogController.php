@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BlogRequest;
+use App\Models\Category;
 use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
@@ -35,7 +36,7 @@ class BlogController
             return redirect()->route('login');
         }
 
-        return view('blog.create');
+        return view('blog.create', ['allCategories' => Category::all()]);
     }
 
     /**
@@ -49,6 +50,13 @@ class BlogController
             ...$request->validated(),
             'user_id' => $request->user()->id
         ]);
+
+        $validated = $request->validate([
+            'categories' => 'required|array',
+            'categories.*' => 'exists:categories,id',
+        ]);
+
+        $blog->categories()->syncWithoutDetaching($validated['categories']);
 
         return redirect()->route('blog.show', ['blog' => $blog])
             ->with('success', 'Blog created successfully.');
@@ -68,7 +76,8 @@ class BlogController
     public function edit(Blog $blog)
     {
         Gate::authorize('update', $blog);
-        return view('blog.edit', ['blog' => $blog]);
+
+        return view('blog.edit', ['blog' => $blog, 'allCategories' => Category::all()]);
     }
 
     /**
@@ -88,14 +97,40 @@ class BlogController
      */
     public function destroy(Blog $blog)
     {
-//        try {
-            Gate::authorize('delete', $blog);
-//        } catch (AuthorizationException $e) {
-//            return redirect()->route('login');
-//        }
+        Gate::authorize('delete', $blog);
 
         $blog->delete();
         return redirect()->route('blog.index')
             ->with('success', 'Blog deleted successfully.');
+    }
+
+    public function addCategories(Request $request, Blog $blog)
+    {
+        Gate::authorize('update', $blog);
+
+        $validated = $request->validate([
+            'categories' => 'required|array',
+            'categories.*' => 'exists:categories,id',
+        ]);
+
+        $blog->categories()->syncWithoutDetaching($validated['categories']);
+
+        return redirect()->route('blog.edit', ['blog' => $blog])
+            ->with('success', 'Categories added successfully.');
+    }
+
+    public function removeCategories(Request $request, Blog $blog)
+    {
+        Gate::authorize('update', $blog);
+
+        $validated = $request->validate([
+            'categories' => 'required|array',
+            'categories.*' => 'exists:categories,id',
+        ]);
+
+        $blog->categories()->detach($validated['categories']);
+
+        return redirect()->route('blog.edit', ['blog' => $blog])
+            ->with('success', 'Categories removed successfully.');
     }
 }
