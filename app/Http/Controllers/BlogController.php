@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BlogRequest;
+use App\Http\Requests\CommentRequest;
 use App\Models\Category;
+use App\Models\Comment;
 use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use App\Models\Blog;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
 class BlogController
@@ -132,5 +135,29 @@ class BlogController
 
         return redirect()->route('blog.edit', ['blog' => $blog])
             ->with('success', 'Categories removed successfully.');
+    }
+
+    public function addComment(Request $request, Blog $blog)
+    {
+        $request->validate([
+            'comment' => 'required|max:500',
+        ]);
+
+        Comment::create([
+            'user_id' => Auth::id(),
+            'blog_id' => $blog->id,
+            'content' => $request->comment,
+        ]);
+
+        return redirect()->route('blog.show', ['blog' => $blog])
+            ->with('success', 'Comment added successfully.');
+    }
+
+    public function removeComment(Blog $blog, Comment $comment)
+    {
+        $comment->delete();
+
+        return redirect()->route('blog.show', ['blog' => $blog])
+            ->with('success', 'Comment successfully deleted.');
     }
 }

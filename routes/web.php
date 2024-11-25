@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\CommentController;
 use Illuminate\Support\Facades\Route;
 
 //Registration
@@ -25,8 +26,14 @@ Route::middleware('auth')->group(function () {
         ->only(['store', 'update', 'edit', 'destroy']);
     Route::post('logout', [AuthController::class, 'logout'])
         ->name('logout');
+
     Route::post('/blogs/{blog}/categories', [BlogController::class, 'addCategories'])
         ->name('blog.categories.add');
     Route::delete('/blogs/{blog}/categories', [BlogController::class, 'removeCategories'])
         ->name('blog.categories.remove');
+
+    Route::post('/blogs/{blog}/comments', [BlogController::class, 'addComment'])
+        ->name('blog.comments.add');
+    Route::delete('/blogs/{blog}/comments/{comment}', [BlogController::class, 'removeComment'])
+        ->name('blog.comments.remove');
 });
